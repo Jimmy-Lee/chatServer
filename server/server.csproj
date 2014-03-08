@@ -45,7 +45,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="chatServer.cs">
+    <Compile Include="server.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
