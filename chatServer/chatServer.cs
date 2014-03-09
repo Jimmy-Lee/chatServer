@@ -26,7 +26,7 @@ namespace chatServer
             Socket newSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             newSocket.Bind(ipep);
-            newSocket.Listen(100);
+            newSocket.Listen(10);
 
             while (true)
             {
@@ -73,9 +73,29 @@ namespace chatServer
                     return "";
                 }
             }
+
+            if (msg.IndexOf("sendPic:") == 0)
+            {
+                Console.WriteLine("picture coming in\n");
+                broadCast(msg);
+                Byte[] buffer = new Byte[131072];
+                int index = clientIDList.IndexOf(msg.Substring(msg.IndexOf(':')+1));
+                int receive = clientList[index].socket.Receive(buffer);
+
+                // create temp file
+
+                File.WriteAllBytes("tempFile", buffer);
+                // broadCast temp file
+                foreach(chatSocket client in clientList)
+                    client.socket.SendFile("tempFile");
+                return "";
+                // int receive = clientList[index].socket.Receive(buffer);
+                // broadCast(msg + ':' + receive);
+            }
+
             String nameAndTime = msg.Substring(0, msg.IndexOf(':') - 1) + " ─ " + DateTime.Now.ToLongTimeString();
             String message = msg.Substring(msg.IndexOf(':') + 2);
-            broadCast(nameAndTime + "\n→  " + message);
+            broadCast(nameAndTime + "\n    " + message);
             return "";
         }
 
